@@ -44,3 +44,30 @@ response = Faraday.post "https://github.com/login/oauth/access_token",
 ```
 
 Use `JSON.parse` to parse the response body into a hash, and then store the access token in `session[:token]`.
+
+#### Use the access token to access the API
+
+Now that users have their API tokens, they can make calls to all of the API endpoints as long as those tokens are included in the headers as authorization. The GitHub API documentation says to include the following header: `Authorization: token OAUTH-TOKEN`.
+
+Take a look at the [Users section](https://developer.github.com/v3/users/) for some examples of API calls. Let's get the user's login name and store it in the user's session upon login.
+
+According to the documentation, the call to get the authenticated user is `GET /user`. We don't need to send any parameters, so our parameters hash will be empty. As far as headers, we need our Authorization header and our Accept header.
+
+At the bottom of your `create` action in `SessionsController`, make a call to the GitHub API:
+
+```ruby
+user_response = Faraday.get "https://api.github.com/user", 
+  {}, 
+  {'Authorization' => "token #{session[:token]}", 
+    'Accept' => 'application/json'}
+```
+
+Parse the response body using JSON, and save the username to `session[:username]`.
+
+## Instructions
+
+1. Follow the tutorial above to implement authentication with the GitHub API. Display the current user's username on the `index` page in a heading.
+
+2. On the repositories `index` page, display a list of the current user's repositories. Displaying only the first page of results is fine; feel free to tackle pagination as a bonus.
+
+3. Implement the `create` action in your `RepositoriesController` so that the form on `index.html.erb` successfully creates a new repository for the current user. The form input should be the name of the new repository.
