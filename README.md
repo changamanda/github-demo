@@ -37,7 +37,9 @@ Back to our handy documentation! GitHub redirects users with a code that can be 
 According to the docs, you need to send a POST request to `https://github.com/login/oauth/access_token` with the parameters `client_id`, `client_secret`, and `code`:
 
 ```ruby
-response = Faraday.post "https://github.com/login/oauth/access_token", {client_id: ENV["GITHUB_CLIENT"], client_secret: ENV["GITHUB_SECRET"], code: params[:code]}, {'Accept' => 'application/json'}
+response = Faraday.post "https://github.com/login/oauth/access_token", 
+  {client_id: ENV["GITHUB_CLIENT"], client_secret: ENV["GITHUB_SECRET"], code: params[:code]}, 
+  {'Accept' => 'application/json'}
 ```
 
 Use `JSON.parse` to parse the response body into a hash, and then store the access token in `session[:token]`.
