@@ -12,5 +12,15 @@ Take a look at the [OAuth section of the Github API Documentation](https://devel
 
 #### Redirect users to request GitHub access
 
-First off, we need to [register our application with Github](https://github.com/settings/applications/new). In this case, our redirect URL is `http://localhost:3000/auth`, which takes us to `sessions#create`. Our homepage URL is `http://localhost:3000/`.
+First off, we need to [register our application with Github](https://github.com/settings/applications/new). In this case, our redirect URL is `http://localhost:3000/auth`, which takes us to `sessions#create`. Our homepage URL is `http://localhost:3000/`. We also need to create a `.env` [file](https://github.com/bkeepers/dotenv) that holds our `GITHUB_CLIENT` and `GITHUB_SECRET`.
 
+Ultimately, a user will be considered "logged in" if they have an access token stored in their session. So, let's create a private method `#logged_in?` in our `ApplicationController` that will return false if `session[:token]` is nil and true otherwise:
+
+```ruby
+private
+  def logged_in?
+    !!session[:token]
+  end
+```
+
+Now, write another private method `#authenticate_user` that will redirect the user to `https://github.com/login/oauth/authorize` _if_ the user is not already logged in. You'll need to send a few parameters along with your redirection: `client_id` should have a value of `ENV[GITHUB_CLIENT]`, and `scope` should have a value of `repo`. You can send these parameters via a [query string](https://en.wikipedia.org/wiki/Query_string).
