@@ -38,7 +38,8 @@ According to the docs, you need to send a POST request to `https://github.com/lo
 
 ```ruby
 response = Faraday.post "https://github.com/login/oauth/access_token", 
-  {client_id: ENV["GITHUB_CLIENT"], client_secret: ENV["GITHUB_SECRET"], code: params[:code]}, 
+  {client_id: ENV["GITHUB_CLIENT"], client_secret: ENV["GITHUB_SECRET"], 
+    code: params[:code]}, 
   {'Accept' => 'application/json'}
 ```
 
